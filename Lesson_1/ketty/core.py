@@ -8,7 +8,7 @@ class Application:
         path = env['PATH_INFO']
 
         if not path.endswith('/'):
-            path += '/'
+            path = f'{path}/'
 
         if path in self.urlpatterns:
             # получаем view по url
