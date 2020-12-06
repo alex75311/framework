@@ -6,6 +6,10 @@ class Application:
     def __call__(self, env, start_response):
         # текущий url
         path = env['PATH_INFO']
+
+        if not path.endswith('/'):
+            path += '/'
+
         if path in self.urlpatterns:
             # получаем view по url
             view = self.urlpatterns[path]
