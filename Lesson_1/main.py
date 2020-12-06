@@ -12,6 +12,11 @@ def cookie_controller(request):
     request['cookie'] = randint(0, 99999)
 
 
+def link_controller(request):
+    for title in urlpatterns.keys():
+        request['links'] += f'<br><a href={title}>{title}</a>'
+
+
 front_controller = [
     cookie_controller,
 ]
