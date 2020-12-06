@@ -9,7 +9,7 @@ urlpatterns = {
 
 
 def cookie_controller(request):
-    request['cookie'] = randint(9999)
+    request['cookie'] = randint(0, 99999)
 
 
 front_controller = [

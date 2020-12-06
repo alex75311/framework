@@ -2,7 +2,7 @@ from jinja2 import Template
 import os
 
 
-def render(template_name, folder='template', **kwargs):
+def render(template_name, folder='templates', **kwargs):
     file = os.path.join(folder, template_name)
     with open(file, encoding='utf-8') as f:
         template = Template(f.read())
