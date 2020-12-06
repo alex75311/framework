@@ -16,7 +16,7 @@ def link_controller(request):
     request['links'] = ''
     for title in urlpatterns.keys():
         request['links'] += f'<br><a href={title}>{title}</a>'
-    print(request['links'])
+    print(request)
 
 
 front_controller = [
