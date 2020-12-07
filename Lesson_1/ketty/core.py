@@ -1,5 +1,6 @@
 class Application:
     def parse_input_params(self, data: str):
+        """Парсинг параметров (GET или POST"""
         result = {}
         if data:
             params = data.split('&')
@@ -8,7 +9,9 @@ class Application:
                 result[key] = value
         return result
 
-    def get_input_data(self, env):
+    def get_input_data(self, env: dict):
+        """Получение параметров POST"""
+        result = {}
         length = env['CONTENT_LENGTH']
         if length:
             result = env['wsgi.input'].read(int(length)).decode('utf-8')
@@ -31,13 +34,15 @@ class Application:
             # получаем view по url
             view = self.urlpatterns[path]
             request = {}
+
+            # Получаем пришедшие параметры
             if method == 'GET':
                 request['params'] = self.parse_input_params(env['QUERY_STRING'])
             elif method == 'POST':
                 params_str = self.get_input_data(env)
                 request['params'] = self.parse_input_params(params_str)
 
-            print('', request['params'])
+            print(f'Прилетели параметры методом {method}', request['params'])
             # добавляем в запрос данные из front controllers
             for controller in self.front_controllers:
                 controller(request)
