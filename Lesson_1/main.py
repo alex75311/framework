@@ -5,6 +5,7 @@ from random import randint
 urlpatterns = {
     '/': views.main_view,
     '/about/': views.about_view,
+    '/contact/': views.contact,
 }
 
 

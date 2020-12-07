@@ -8,3 +8,7 @@ def main_view(request):
 
 def about_view(request):
     return '200 OK', render('about.html', links=request['links'])
+
+
+def contact(request):
+    return '200 OK', render('contact.html', links=request['links'])
