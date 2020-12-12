@@ -1,3 +1,4 @@
+from main import urlpatterns
 from ketty import render
 
 
@@ -12,3 +13,9 @@ def about_view(request):
 
 def contact(request):
     return '200 OK', render('contact.html', links=request['links'])
+
+
+def menu(request):
+    request['links'] = ''
+    for title in urlpatterns.keys():
+        request['links'] += title
