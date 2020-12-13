@@ -1,11 +1,11 @@
-from ketty import Application
 import views
+from ketty import Application
 from random import randint
 
 urlpatterns = {
     '/': views.main_view,
     '/about/': views.about_view,
-    '/contact/': views.contact,
+    '/contact/': views.contact_view,
 }
 
 
@@ -14,9 +14,9 @@ def cookie_controller(request):
 
 
 def link_controller(request):
-    request['links'] = ''
+    request['links'] = []
     for title in urlpatterns.keys():
-        request['links'] += f'<br><a href={title}>{title}</a>'
+        request['links'].append(title)
 
 
 front_controller = [
