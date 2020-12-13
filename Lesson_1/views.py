@@ -1,21 +1,14 @@
-from main import urlpatterns
 from ketty import render
 
 
 def main_view(request):
     cookie = request['cookie']
-    return '200 OK', render('index.html', cookie=cookie, links=request['links'])
+    return '200 OK', render('index.html', cookie=cookie, links=request['links'], title='Index')
 
 
 def about_view(request):
-    return '200 OK', render('about.html', links=request['links'])
+    return '200 OK', render('about.html', links=request['links'], title='About')
 
 
-def contact(request):
-    return '200 OK', render('contact.html', links=request['links'])
-
-
-def menu(request):
-    request['links'] = ''
-    for title in urlpatterns.keys():
-        request['links'] += title
+def contact_view(request):
+    return '200 OK', render('contact.html', links=request['links'], title='Contact')
