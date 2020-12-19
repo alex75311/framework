@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact</title>
-</head>
-<body>
-{{links}}
+{% extends 'base.html' %}
+
+{% block body %}
+<h1>Contact</h1>
 <form method="post">
     <input type="text" name="name" placeholder="Your name">
     <br>
@@ -15,5 +11,4 @@
     <br>
     <button type="submit">Send</button>
 </form>
-</body>
-</html>
+{% endblock %}

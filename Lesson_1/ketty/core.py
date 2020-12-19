@@ -1,13 +1,15 @@
+import urllib
+
+
 class Application:
 
     def add_route(self, url):
         def inner(view):
             self.urlpatterns[url] = view
-
         return inner
 
     def parse_input_params(self, data: str):
-        """Парсинг параметров (GET или POST"""
+        """Парсинг параметров (GET или POST)"""
         result = {}
         if data:
             params = data.split('&')
@@ -19,9 +21,10 @@ class Application:
     def get_input_data(self, env: dict):
         """Получение параметров POST"""
         result = {}
-        length = env['CONTENT_LENGTH']
+        length = env.get('CONTENT_LENGTH')
         if length:
             result = env['wsgi.input'].read(int(length)).decode('utf-8')
+            result = urllib.parse.unquote(result)
         return result
 
     def __init__(self, urlpatterns: dict, front_controllers: list):
@@ -42,14 +45,15 @@ class Application:
             view = self.urlpatterns[path]
             request = {}
 
-            # Получаем пришедшие параметры
-            if method == 'GET':
-                request['params'] = self.parse_input_params(env['QUERY_STRING'])
-            elif method == 'POST':
-                params_str = self.get_input_data(env)
-                request['params'] = self.parse_input_params(params_str)
+            # добавляем метод которым пришел запрос
+            request['method'] = method
 
-            print(f'Прилетели параметры методом {method}', request['params'])
+            # Получаем пришедшие параметры
+            request['params_get'] = self.parse_input_params(env['QUERY_STRING'])
+            params_str = self.get_input_data(env)
+            request['params_post'] = self.parse_input_params(params_str)
+            print(request['params_get'], request['params_post'])
+
             # добавляем в запрос данные из front controllers
             for controller in self.front_controllers:
                 controller(request)
