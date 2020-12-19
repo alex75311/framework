@@ -1,4 +1,11 @@
 class Application:
+
+    def add_route(self, url):
+        def inner(view):
+            self.urlpatterns[url] = view
+
+        return inner
+
     def parse_input_params(self, data: str):
         """Парсинг параметров (GET или POST"""
         result = {}
@@ -55,3 +62,24 @@ class Application:
         else:
             start_response('404 NOT FOUND', [('Content-Type', 'text/html')])
             return [b'Not Found']
+
+
+class DebugApplication(Application):
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = Application(urlpatterns, front_controllers)
+        super(DebugApplication, self).__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response, *args, **kwargs):
+        print('DEBUG MODE')
+        print(env)
+        return self.application(env, start_response)
+
+
+class MockApplication(Application):
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = Application(urlpatterns, front_controllers)
+        super(MockApplication, self).__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response, *args, **kwargs):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        return [b'Hello from Mock']

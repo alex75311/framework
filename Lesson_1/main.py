@@ -21,7 +21,6 @@ def link_controller(request):
 
 front_controller = [
     cookie_controller,
-    link_controller,
 ]
 
 application = Application(urlpatterns, front_controller)
