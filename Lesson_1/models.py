@@ -1,8 +1,12 @@
+import jsonpickle
+
 from reusepatterns.prototypes import PrototypeMixin
+from reusepatterns.observer import Observer, Subject
 
 
 class User:
-    pass
+    def __init__(self, name):
+        self.name = name
 
 
 class Teacher(User):
@@ -10,7 +14,9 @@ class Teacher(User):
 
 
 class Student(User):
-    pass
+    def __init__(self, name):
+        self.courses = []
+        super().__init__(name)
 
 
 class SimpleFactory:
@@ -26,12 +32,15 @@ class UserFactory:
     }
 
     @classmethod
-    def create(cls, type_):
-        return cls.types[type_]()
+    def create(cls, type_, name):
+        return cls.types[type_](name)
 
 
 class Category:
     auto_id = 0
+
+    def __getitem__(self, item):
+        return self.courses[item]
 
     def __init__(self, name, category):
         self.id = Category.auto_id
@@ -47,12 +56,43 @@ class Category:
         return count
 
 
-class Course(PrototypeMixin):
+class Course(PrototypeMixin, Subject):
 
     def __init__(self, name, category):
         self.name = name
         self.category = category
         self.category.courses.append(self)
+        self.students = []
+        super().__init__()
+
+    def __getitem__(self, item):
+        return self.students[item]
+
+    def add_student(self, student: Student):
+        self.students.append(student)
+        student.courses.append(self)
+        self.notify()
+
+
+class SmsNotifier(Observer):
+    def update(self, subject: Course):
+        print(f'SMS=> new student {subject.students[-1].name}')
+
+
+class EmailNotifier(Observer):
+    def update(self, subject: Course):
+        print(f'Email=> new student {subject.students[-1].name}')
+
+
+class BaseSerializer:
+    def __init__(self, obj):
+        self.obj = obj
+
+    def save(self):
+        return jsonpickle.dumps(self.obj)
+
+    def load(self, obj):
+        return jsonpickle.loads(obj)
 
 
 class InteractiveCourse(Course):
@@ -82,8 +122,8 @@ class TrainingSite:
         self.courses = []
         self.categories = []
 
-    def create_user(self, type_):
-        return UserFactory.create(type_)
+    def create_user(self, type_, name):
+        return UserFactory.create(type_, name)
 
     def create_category(self, name, category=None):
         return Category(name, category)
@@ -103,3 +143,8 @@ class TrainingSite:
             if item.name == name:
                 return item
         return None
+
+    def get_student(self, name) -> Student:
+        for student in self.students:
+            if student.name == name:
+                return student

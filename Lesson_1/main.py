@@ -1,5 +1,6 @@
 from ketty import Application, DebugApplication, MockApplication
-from views import main_view, create_course, create_category, copy_course, category_list
+from views import main_view, create_course, create_category, copy_course, \
+                  category_list, student_list, student_create, add_student_by_course
 from random import randint
 
 urlpatterns = {
@@ -8,6 +9,9 @@ urlpatterns = {
     '/create-category/': create_category,
     '/copy-course/': copy_course,
     '/category-list/': category_list,
+    '/student-list/': student_list,
+    '/create-student/': student_create,
+    '/add-student/': add_student_by_course,
 }
 
 

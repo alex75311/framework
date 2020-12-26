@@ -58,3 +58,30 @@ def copy_course(request):
 def category_list(request):
     logger.log('Список категорий')
     return '200 OK', render('category_list.html', objects_list=site.categories)
+
+
+def student_list(request):
+    return '200 OK', render('student_list.html', objects_list=site.students)
+
+
+def student_create(request):
+    data = request['params_post']
+    if data:
+        name = data['name']
+        new_obj = site.create_user('student', name)
+        site.students.append(new_obj)
+    return '200 OK', render('create_student.html')
+
+
+def add_student_by_course(request):
+    data = request['params_post']
+    if data:
+        add_student = data['student_name']
+        add_course = data['course_name']
+        student = site.get_student(add_student)
+        course = site.get_course(add_course)
+        student.courses.append(course)
+
+    students = site.students
+    courses = site.courses
+    return '200 OK', render('add_student.html', students=students, courses=courses)
