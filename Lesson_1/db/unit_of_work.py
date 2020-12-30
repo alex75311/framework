@@ -70,6 +70,8 @@ class MapperRegistry:
     def get_mapper(obj):
         if isinstance(obj, Person):
             return PersonMapper(connection)
+        if isinstance(obj, Category):
+            return CategoryMapper(connection)
 
 
 class UnitOfWork:
@@ -180,4 +182,3 @@ class CategoryMapper:
             self.connection.commit()
         except Exception as e:
             raise DbCommitException(e.args)
-
